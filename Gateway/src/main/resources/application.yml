@@ -1,0 +1,43 @@
+server:
+  port: 9090
+  
+resilience4j:
+  circuitbreaker:
+    instances:
+      service1:
+       register-health-indicator: true
+       ring-buffer-size-in-closed-state: 5
+       ring-buffer-size-in-half-open-state: 3
+       wait-duration-in-open-state: 50s
+       failure-rate-threshold: 50
+       event-consumer-buffer-size: 10   
+  
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+    
+
+spring:        
+  application:
+    name: GATEWAY-SERVICE   
+  cloud:
+    gateway:
+      routes:
+      - id: department
+        uri: http://localhost:8091/
+        predicates:
+         - Path=/api/department/**
+      - id: user
+        uri: http://localhost:8090/
+        predicates:
+         - Path=/api/user/** 
+         
+         
+         
+          
+    
