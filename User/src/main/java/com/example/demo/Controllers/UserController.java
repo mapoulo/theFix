@@ -37,8 +37,13 @@ public class UserController {
 	}
 	
 	
+	@GetMapping("name/{name}")
+	public User findUserByName(@PathVariable String name) {
+		return service.findUserByName(name);
+	}
+	
 	@GetMapping("/")
-	public List<DataValue> getAllUsers(){
+	public List<User> getAllUsers(){
 		return service.getAllUsers();
 	}
 	
@@ -54,8 +59,5 @@ public class UserController {
 	}
 	
 	
-	@GetMapping("/hi")
-	public String sayHi() {
-		return service.sayHello();
-	}
+
 }

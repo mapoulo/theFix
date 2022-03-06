@@ -14,30 +14,34 @@ import com.example.demo.Pojo.Department;
 import com.example.demo.Repositories.UserRepo;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Service
+@AllArgsConstructor
 public class UserService {
 	
 	
 	@Autowired
-	private UserRepo repo;
-	@Autowired
-	private RestTemplate restTemplate;
+	private  UserRepo repo;
+	
+//	@Autowired
+//	private RestTemplate restTemplate;
 	
 	
 	public User saveUser(User user) {
 		return repo.save(user);
 	}
 	
-	@CircuitBreaker(name="service1", fallbackMethod = "failedToGetDepartments")
-	public List<DataValue>  getAllUsers(){
-		List<DataValue> users = new ArrayList<>();
-		DataValue dataValue = new DataValue();
-		repo.findAll().forEach(r->{
-			dataValue.setUser(r);
-			dataValue.setDepartment(restTemplate.getForEntity("http://localhost:8091/api/department/"+r.getDepartmentId(), Department.class).getBody());
-			users.add(dataValue);
-		});
+	
+	public User findUserByName(String name) {
+		return repo.findUserByName(name).get();
+	}
+	
+//	@CircuitBreaker(name="service1", fallbackMethod = "failedToGetDepartments")
+	public List<User>  getAllUsers(){
+		List<User> users = new ArrayList<>();
+	repo.findAll().forEach(users::add);
 		return users;
 	}
 	
@@ -47,11 +51,11 @@ public class UserService {
 		return data;
 	}
 	
-	@CircuitBreaker(name="service1", fallbackMethod = "sayFallBack")
-	public String sayHello() {
-		Department d = restTemplate.getForEntity("http://localhost:8091/api/department/4", Department.class).getBody();
-	 return "Say Hello is called";
-	}
+//	@CircuitBreaker(name="service1", fallbackMethod = "sayFallBack")
+//	public String sayHello() {
+//		Department d = restTemplate.getForEntity("http://localhost:8091/api/department/4", Department.class).getBody();
+//	 return "Say Hello is called";
+//	}
 	
 	public String sayFallBack(Exception e) {
 		return "The say Hello fallback";

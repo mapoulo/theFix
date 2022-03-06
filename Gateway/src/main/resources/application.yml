@@ -21,6 +21,12 @@ eureka:
   instance:
     hostname: localhost
     
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+        - "*"     
 
 spring:        
   application:
@@ -36,7 +42,10 @@ spring:
         uri: http://localhost:8090/
         predicates:
          - Path=/api/user/** 
-         
+
+
+
+        
          
          
           
